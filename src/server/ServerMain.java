@@ -15,15 +15,21 @@ public class ServerMain {
         // Inicializa o servidor
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Servidor iniciado na porta " + PORT + ". Aguardando conexões...");
+            System.out.println("'Chat [mensagem]' para mensagens.");
 
             // Thread para enviar mensagens para todos os clientes
             new Thread(() -> {
                 try (Scanner scanner = new Scanner(System.in)) {
                     while (true) {
-                        System.out.print("Chat: ");
                         String command = scanner.nextLine();
-                        sendMessageToAllClients(command);
+                        if (command.startsWith("Chat ")) {
+                            sendMessageToAllClients(command.substring(5));
+                        } else {
+                            System.out.println("Mensagem '" + command + "' nao enviada.");
+                        }
                     }
+                } catch (IOException e) {
+                    System.out.println("Deu algum erro...");
                 }
             }).start();
 
@@ -32,14 +38,14 @@ public class ServerMain {
                 Socket clientSocket = serverSocket.accept();
                 ClientHandler clientHandler = new ClientHandler(clientSocket);
                 clients.add(clientHandler);
-                clientHandler.run();
+                new Thread(clientHandler).start();
             }
         } catch (IOException e) {
             System.err.println("Erro ao abrir o servidor: " + e.getMessage());
         }
     }
 
-    private static void sendMessageToAllClients(String message) {
+    private static void sendMessageToAllClients(String message) throws IOException {
         for (ClientHandler client : clients) {
             client.sendMessage(message);
         }
