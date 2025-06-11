@@ -44,7 +44,7 @@ public class ClientMain {
                             System.out.println("Arquivo '" + fileName + "' (" + fileSize + ") bytes encontrado.");
 
                             File receivedFile = FileReceiver.receiveFile(dataInput, fileName, fileSize, fileHash,
-                                    "client_downloads");
+                                    "..\\client_downloads");
                             System.out.println("Arquivo recebido com sucesso: " + receivedFile.getPath());
                             continue;
                         }

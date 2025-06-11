@@ -65,7 +65,7 @@ public class ClientHandler implements Runnable {
             return;
         }
 
-        File file = new File("server_files", fileName);
+        File file = new File("..\\server_files", fileName);
         file.getParentFile().mkdirs();
 
         if (file.exists() && file.isFile()) {
